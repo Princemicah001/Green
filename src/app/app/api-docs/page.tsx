@@ -139,6 +139,66 @@ const ENDPOINTS: EndpointDoc[] = [
       },
     },
   },
+  {
+    method: 'POST',
+    path: '/api/claims',
+    description: 'File a citizen claim (complaint). Returns a tracking number (EC-XXXXX) to follow progress and a ticket number (TK-XXXXX) used to earn GreenPoints once verified.',
+    exampleRequest: {
+      locationId: 'nairobi',
+      locationName: 'Nairobi',
+      title: 'Factory releasing waste into the river',
+      details: 'Milky foam downstream of the bridge every morning.',
+      category: 'POLLUTION',
+      urgency: 'HIGH',
+      evidence: [],
+    },
+    exampleResponse: {
+      status: 'success',
+      message: 'Claim received. Keep the tracking number to follow progress.',
+      claim: { trackingNumber: 'EC-48213', ticketNumber: 'TK-90411', status: 'SUBMITTED' },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/api/claims?ref=EC-48213',
+    description: 'Track a claim by tracking or ticket number, or list all claims (optionally filtered by ?status=UNDER_REVIEW).',
+    exampleResponse: {
+      status: 'success',
+      data: {
+        trackingNumber: 'EC-48213',
+        status: 'VERIFIED',
+        ticketNumber: 'TK-90411',
+        locationName: 'Nairobi',
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/api/points',
+    description: 'GreenPoints wallet: current balance, lifetime earned/redeemed and transaction history.',
+    exampleResponse: {
+      status: 'success',
+      wallet: {
+        balance: 150,
+        totalEarned: 400,
+        totalRedeemed: 250,
+        history: [{ type: 'EARNED', amount: 150, ref: 'TK-89710' }],
+      },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/api/points',
+    description: 'Earn points by ticket number ({ ticketNumber: "TK-XXXXX" }) or redeem a gift ({ giftId: "solar-lamp" }). Same flow the USSD Green Line uses.',
+    exampleRequest: {
+      ticketNumber: 'TK-90411',
+    },
+    exampleResponse: {
+      status: 'success',
+      message: '+130 GreenPoints added to your wallet.',
+      balance: 280,
+    },
+  },
 ];
 
 export default function ApiDocsPage() {

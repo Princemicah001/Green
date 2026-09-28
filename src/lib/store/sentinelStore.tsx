@@ -8,7 +8,13 @@ import {
   SentinelAlert, 
   MitigationPlan,
   SystemStatusState,
-  EnvironmentalSignals
+  EnvironmentalSignals,
+  Claim,
+  ClaimEvidence,
+  ClaimStatus,
+  PointsWallet,
+  GiftItem,
+  ControllerAction
 } from '@/types';
 import { LocationRepository } from '@/lib/repositories/locationRepository';
 import { ReportRepository } from '@/lib/repositories/reportRepository';
@@ -18,6 +24,11 @@ import { generateMitigationPlan } from '@/lib/intelligence/mitigationEngine';
 import { evaluateAlertRules } from '@/lib/intelligence/alertEngine';
 import { TelemetrySimulator } from '@/lib/simulation/telemetrySimulator';
 import { SubmitReportInput } from '@/lib/providers/communityProvider';
+import { SubmitClaimInput } from '@/lib/providers/claimProvider';
+import { ClaimRepository } from '@/lib/repositories/claimRepository';
+import { PointsRepository } from '@/lib/repositories/pointsRepository';
+import { ClaimProvider } from '@/lib/providers/claimProvider';
+import { GIFT_CATALOG } from '@/data/gifts';
 
 interface SentinelContextType {
   selectedLocationId: string;
@@ -31,9 +42,20 @@ interface SentinelContextType {
   locationAlerts: SentinelAlert[];
   mitigationPlan: MitigationPlan | null;
   systemStatus: SystemStatusState;
-  
+
+  // Claims & Green Rewards
+  claims: Claim[];
+  giftCatalog: GiftItem[];
+  pointsWallet: PointsWallet;
+  isClaimModalOpen: boolean;
+
   // Actions
   setSelectedLocationId: (id: string) => void;
+  submitClaim: (input: SubmitClaimInput) => Promise<Claim>;
+  setClaimStatus: (claimId: string, status: ClaimStatus, note?: string) => void;
+  awardClaimPoints: (claimId: string) => void;
+  redeemGift: (gift: GiftItem) => boolean;
+  setIsClaimModalOpen: (open: boolean) => void;
   submitCommunityReport: (input: SubmitReportInput) => Promise<CommunityReport>;
   triggerHeatSpike: (locationId?: string) => void;
   simulateMitigationResponse: (facilityId: string) => MitigationPlan;
@@ -60,6 +82,8 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
   const repRepo = ReportRepository.getInstance();
   const infraRepo = InfrastructureRepository.getInstance();
   const alertRepo = AlertRepository.getInstance();
+  const claimRepo = ClaimRepository.getInstance();
+  const pointsRepo = PointsRepository.getInstance();
 
   const [selectedLocationId, setSelectedLocationId] = useState<string>('nairobi');
   const [locations, setLocations] = useState<LocationTwin[]>([]);
@@ -68,6 +92,9 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
   const [alerts, setAlerts] = useState<SentinelAlert[]>([]);
   const [mitigationPlan, setMitigationPlan] = useState<MitigationPlan | null>(null);
   const [demoStep, setDemoStep] = useState<number>(0);
+  const [claims, setClaims] = useState<Claim[]>([]);
+  const [pointsWallet, setPointsWallet] = useState<PointsWallet>({ balance: 0, totalEarned: 0, totalRedeemed: 0, history: [] });
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState<boolean>(false);
 
   const [systemStatus] = useState<SystemStatusState>({
     dataIngestion: 'OPERATIONAL',
@@ -109,6 +136,8 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
     setFacilities(infraRepo.getAll());
     setCommunityReports(repRepo.getAll());
     setAlerts(alertRepo.getAll());
+    setClaims(claimRepo.getAll());
+    setPointsWallet(pointsRepo.getWallet());
 
     if (typeof window !== 'undefined') {
       try {
@@ -257,6 +286,84 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
     setAlerts(alertRepo.getAll());
   }, []);
 
+  // ─── Claims & Green Rewards ──────────────────────────────────────────
+
+  const refreshClaimsAndPoints = useCallback(() => {
+    setClaims(claimRepo.getAll());
+    setPointsWallet(pointsRepo.getWallet());
+  }, [claimRepo, pointsRepo]);
+
+  const submitClaim = useCallback(async (input: SubmitClaimInput): Promise<Claim> => {
+    const provider = ClaimProvider.getInstance();
+    const trackingNumber = provider.generateTrackingNumber();
+    const ticketNumber = provider.generateTicketNumber();
+    const evidence: ClaimEvidence[] = input.evidence.map((ev, i) => ({
+      ...ev,
+      id: `ev-${Date.now()}-${i}`,
+    }));
+
+    const newClaim: Claim = {
+      id: `claim-${Date.now()}`,
+      trackingNumber,
+      ticketNumber,
+      locationId: input.locationId,
+      locationName: input.locationName,
+      title: input.title,
+      details: input.details,
+      category: input.category,
+      urgency: input.urgency,
+      evidence,
+      status: 'SUBMITTED',
+      submittedAt: new Date().toISOString(),
+      controllerActionLog: [
+        { id: `ca-${Date.now()}`, action: 'RECEIVED', at: new Date().toISOString() },
+      ],
+    };
+
+    claimRepo.addClaim(newClaim);
+    refreshClaimsAndPoints();
+    return newClaim;
+  }, [claimRepo, refreshClaimsAndPoints]);
+
+  const setClaimStatus = useCallback((claimId: string, status: ClaimStatus, note?: string) => {
+    const actionMap: Record<ClaimStatus, ControllerAction['action']> = {
+      SUBMITTED: 'RECEIVED',
+      UNDER_REVIEW: 'START_REVIEW',
+      VERIFIED: 'VERIFY',
+      REWARDED: 'AWARD',
+      REJECTED: 'REJECT',
+    };
+    claimRepo.appendAction(claimId, {
+      id: `ca-${Date.now()}`, action: actionMap[status], note, at: new Date().toISOString(),
+    });
+    claimRepo.updateStatus(claimId, status);
+    refreshClaimsAndPoints();
+  }, [claimRepo, refreshClaimsAndPoints]);
+
+  const awardClaimPoints = useCallback((claimId: string) => {
+    const claim = claimRepo.getById(claimId);
+    if (!claim) return;
+
+    const provider = ClaimProvider.getInstance();
+    const points = provider.computePoints(claim.urgency, claim.evidence.length);
+
+    claimRepo.appendAction(claimId, {
+      id: `ca-${Date.now()}`, action: 'AWARD', note: `${points} GreenPoints sent to reporter wallet.`, at: new Date().toISOString(),
+    });
+    claimRepo.updateStatus(claimId, 'REWARDED', points);
+
+    pointsRepo.awardForClaim(claimRepo.getById(claimId)!);
+    refreshClaimsAndPoints();
+  }, [claimRepo, pointsRepo, refreshClaimsAndPoints]);
+
+  const redeemGift = useCallback((gift: GiftItem): boolean => {
+    if (pointsRepo.getWallet().balance < gift.costPoints) return false;
+    const txn = pointsRepo.redeem(gift.costPoints, gift.id, `Redeemed: ${gift.name}`);
+    if (!txn) return false;
+    refreshClaimsAndPoints();
+    return true;
+  }, [pointsRepo, refreshClaimsAndPoints]);
+
   const resetAllDemoData = useCallback(() => {
     locRepo.resetToDefault();
     repRepo.resetToDefault();
@@ -269,6 +376,11 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
     setMitigationPlan(null);
     setDemoStep(0);
     setSelectedLocationId('nairobi');
+    claimRepo.resetToDefault();
+    pointsRepo.resetToDefault();
+    setClaims(claimRepo.getAll());
+    setPointsWallet(pointsRepo.getWallet());
+    setIsClaimModalOpen(false);
   }, []);
 
   // Guided Demonstration Scenario Runner (Section 45)
@@ -343,6 +455,15 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
         simulateMitigationResponse,
         acknowledgeAlert,
         resetAllDemoData,
+        claims,
+        giftCatalog: GIFT_CATALOG,
+        pointsWallet,
+        isClaimModalOpen,
+        submitClaim,
+        setClaimStatus,
+        awardClaimPoints,
+        redeemGift,
+        setIsClaimModalOpen,
         theme,
         setTheme,
         toggleTheme,

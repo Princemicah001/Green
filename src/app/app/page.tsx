@@ -6,6 +6,7 @@ import { useSentinel } from '@/lib/store/sentinelStore';
 import DigitalTwinPanel from '@/components/digital-twin/DigitalTwinPanel';
 import GlobeControls from '@/components/globe/GlobeControls';
 import AlertStream from '@/components/alerts/AlertStream';
+import DemoScenarioBar from '@/components/scenario/DemoScenarioBar';
 import { EnvironmentalStatus } from '@/types';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
@@ -50,17 +51,20 @@ export default function OverviewPage() {
         </div>
 
         {/* Floating Globe Controls Bar */}
-        <GlobeControls
-          showFacilities={showFacilities}
-          setShowFacilities={setShowFacilities}
-          showCommunitySignals={showCommunitySignals}
-          setShowCommunitySignals={setShowCommunitySignals}
-          showClimateStress={showClimateStress}
-          setShowClimateStress={setShowClimateStress}
-          filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
-          onResetFocus={() => setSelectedLocationId('nairobi')}
-        />
+        <div className="flex flex-col items-end gap-3">
+          <GlobeControls
+            showFacilities={showFacilities}
+            setShowFacilities={setShowFacilities}
+            showCommunitySignals={showCommunitySignals}
+            setShowCommunitySignals={setShowCommunitySignals}
+            showClimateStress={showClimateStress}
+            setShowClimateStress={setShowClimateStress}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            onResetFocus={() => setSelectedLocationId('nairobi')}
+          />
+          <DemoScenarioBar />
+        </div>
       </div>
 
       {/* Main Workspace: 3D Globe is the HERO */}

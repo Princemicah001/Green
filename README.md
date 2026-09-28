@@ -115,7 +115,7 @@ Where:
 * Responsible scientific language adhering to statistical rigor: *"Observed relationship"*, *"Potential correlation"*, *"Environmental anomaly"*; never claiming single-source causality.
 
 ### 4.7 Green Finance Evidence Layer
-* Empirical auditability layer for the **Climate Data, Awareness & Green Finance** hackathon track.
+* Empirical auditability layer for green finance: sustainability-linked loans, resilience bonds and parametric credit.
 * Provides immutable evidence for:
   * Sustainability-Linked Infrastructure Loans (SLIL)
   * Water Resilience Bonds (WRB)
@@ -147,6 +147,8 @@ The platform includes production-ready API routes accessible under `/api/*`:
 | `/api/infrastructure` | `GET` | Connected data center SCADA and BMS telemetry |
 | `/api/community` | `GET` | Query anonymized verified ground observations |
 | `/api/community/report` | `POST` | Ingest ground telemetry (triggers automatic stress recalculation) |
+| `/api/claims` | `GET` / `POST` | File citizen claims; returns tracking number (EC-XXXXX). Track via `?ref=EC-48213` |
+| `/api/points` | `GET` / `POST` | GreenPoints wallet; earn by `{ ticketNumber }` or redeem by `{ giftId }` (USSD parity) |
 | `/api/history/:id` | `GET` | Fetch 90-day time series and Time Machine replay steps |
 | `/api/stress` | `POST` | Calculate multi-domain stress with custom weight configuration |
 | `/api/alerts` | `GET` | Query active operational threshold alerts |

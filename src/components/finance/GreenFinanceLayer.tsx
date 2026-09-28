@@ -16,7 +16,7 @@ export default function GreenFinanceLayer() {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-wider text-apple-muted dark:text-eco-400 font-semibold font-mono">
-              Climate Data & Awareness Hackathon Track
+              Environmental Performance & Funding Readiness
             </span>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-env-emerald/10 text-env-emerald border border-env-emerald/20 font-bold">
               EVIDENCE LAYER

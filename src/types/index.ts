@@ -157,6 +157,80 @@ export interface GreenFinanceProfile {
   lastAuditDate: string;
 }
 
+// ─── Claims & Green Rewards ───────────────────────────────────────────────
+
+export type ClaimCategory = 'WATER' | 'ENERGY' | 'HEAT' | 'FLOODING' | 'POLLUTION' | 'WASTE' | 'OTHER';
+
+export type ClaimStatus = 'SUBMITTED' | 'UNDER_REVIEW' | 'VERIFIED' | 'REWARDED' | 'REJECTED';
+
+export type EvidenceKind = 'PHOTO' | 'VIDEO' | 'VOICE';
+
+export interface ClaimEvidence {
+  id: string;
+  kind: EvidenceKind;
+  fileName: string;
+  sizeBytes: number;
+  capturedAt: string; // ISO timestamp
+  /** Object URL for in-session preview (not persisted) */
+  previewUrl?: string;
+}
+
+export interface Claim {
+  id: string;
+  trackingNumber: string;   // e.g. "EC-48213" — what the reporter keeps
+  ticketNumber: string;     // e.g. "TK-90411" — issued when verified, used on USSD
+  locationId: string;
+  locationName: string;
+  title: string;
+  details: string;
+  category: ClaimCategory;
+  urgency: 'LOW' | 'MEDIUM' | 'HIGH';
+  evidence: ClaimEvidence[];
+  status: ClaimStatus;
+  submittedAt: string;
+  reviewedAt?: string;
+  verifiedAt?: string;
+  rewardedAt?: string;
+  /** GreenPoints granted on verification */
+  pointsAwarded?: number;
+  reviewerNote?: string;
+  controllerActionLog: ControllerAction[];
+}
+
+export interface ControllerAction {
+  id: string;
+  action: 'RECEIVED' | 'START_REVIEW' | 'REQUEST_MORE_INFO' | 'VERIFY' | 'REJECT' | 'AWARD';
+  note?: string;
+  at: string;
+}
+
+export interface GiftItem {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;             // lucide icon key handled by the marketplace
+  costPoints: number;
+  stock: number;
+  partner: string;
+  category: 'SOLAR' | 'LIGHTING' | 'WATER' | 'COOKING' | 'HOUSEHOLD';
+}
+
+export interface PointsWallet {
+  balance: number;
+  totalEarned: number;
+  totalRedeemed: number;
+  history: PointsTransaction[];
+}
+
+export interface PointsTransaction {
+  id: string;
+  type: 'EARNED' | 'REDEEMED';
+  amount: number;
+  description: string;
+  ref: string;              // ticket number or gift id
+  at: string;
+}
+
 export interface SystemStatusState {
   dataIngestion: 'OPERATIONAL' | 'DEGRADED';
   climatePipeline: 'OPERATIONAL' | 'DEGRADED';

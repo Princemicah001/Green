@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useSentinel } from '@/lib/store/sentinelStore';
 import CommunityFeed from '@/components/community/CommunityFeed';
 import CommunityReportModal from '@/components/community/CommunityReportModal';
-import { Plus, ShieldCheck, Waves, Flame, Zap, Droplets, Sparkles, Filter } from 'lucide-react';
+import { Plus, ShieldCheck, Waves, Flame, Zap, Droplets, Sparkles, Filter, Megaphone } from 'lucide-react';
 import { CommunityCategory } from '@/types';
 
 export default function CommunityPage() {
@@ -28,7 +28,7 @@ export default function CommunityPage() {
           <div className="lg:col-span-7 p-6 sm:p-8 md:p-10 space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-env-emerald/10 border border-env-emerald/20 text-env-emerald text-xs font-semibold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Ground Telemetry Integration</span>
+              <span>People watching together</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-apple-text dark:text-eco-50">
@@ -36,21 +36,21 @@ export default function CommunityPage() {
             </h1>
 
             <p className="text-base sm:text-lg text-apple-secondary dark:text-eco-200 leading-relaxed font-sans">
-              Connecting real-time observations from rangers, agriculturalists, and local water stewards with satellite and infrastructure telemetry to detect environmental strain early.
+              Real observations from rangers, farmers and neighbours — combined with satellite views to catch environmental problems early.
             </p>
 
             {/* 3-Step Flow Pills */}
             <div className="flex flex-wrap items-center gap-2 pt-2 text-xs sm:text-sm font-medium">
               <span className="px-3 py-1 rounded-full bg-apple-subtle dark:bg-eco-800 text-apple-text dark:text-eco-200 border border-apple-border dark:border-eco-700">
-                1. Field Observation
+                1. Someone notices
               </span>
               <span className="text-apple-muted dark:text-eco-500">→</span>
               <span className="px-3 py-1 rounded-full bg-apple-subtle dark:bg-eco-800 text-apple-text dark:text-eco-200 border border-apple-border dark:border-eco-700">
-                2. Satellite Cross-Check
+                2. Satellites confirm
               </span>
               <span className="text-apple-muted dark:text-eco-500">→</span>
               <span className="px-3 py-1 rounded-full bg-env-emerald/10 text-env-emerald dark:text-env-leaf border border-env-emerald/20 font-semibold">
-                3. Proactive Intervention
+                3. Action happens
               </span>
             </div>
 
@@ -61,8 +61,16 @@ export default function CommunityPage() {
                 className="flex items-center gap-2 px-5 py-2.5 bg-env-emerald hover:bg-env-forest text-white font-medium text-sm sm:text-base rounded-2xl shadow-apple-sm transition-all active:scale-95"
               >
                 <Plus className="w-5 h-5" />
-                <span>Submit Field Observation</span>
+                <span>Share an observation</span>
               </button>
+
+              <a
+                href="/app/claims"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700 text-apple-text dark:text-eco-100 hover:bg-apple-subtle dark:hover:bg-eco-850 font-medium text-sm sm:text-base rounded-2xl shadow-apple-sm transition-all active:scale-95"
+              >
+                <Megaphone className="w-5 h-5 text-env-emerald" />
+                <span>Report a problem & earn</span>
+              </a>
 
               <button
                 onClick={() => setFilterBySelectedLocation(!filterBySelectedLocation)}
@@ -105,15 +113,15 @@ export default function CommunityPage() {
         </div>
 
         <div className="p-5 bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 rounded-2xl shadow-apple-card">
-          <div className="text-xs font-mono uppercase tracking-wider text-apple-muted dark:text-eco-400 font-semibold">Verification Rate</div>
+          <div className="text-xs font-mono uppercase tracking-wider text-apple-muted dark:text-eco-400 font-semibold">Confirmed by satellites</div>
           <div className="text-2xl sm:text-3xl font-bold text-env-emerald mt-1.5">94.8%</div>
-          <div className="text-xs text-apple-secondary dark:text-eco-400 mt-1 font-medium">Cross-matched vs satellite</div>
+          <div className="text-xs text-apple-secondary dark:text-eco-400 mt-1 font-medium">of observations matched</div>
         </div>
 
         <div className="p-5 bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 rounded-2xl shadow-apple-card">
           <div className="text-xs font-mono uppercase tracking-wider text-apple-muted dark:text-eco-400 font-semibold">Privacy Standard</div>
-          <div className="text-2xl sm:text-3xl font-bold text-apple-text dark:text-eco-50 mt-1.5">Zero PII</div>
-          <div className="text-xs text-apple-secondary dark:text-eco-400 mt-1 font-medium">Fuzzed coordinates (~1.2km)</div>
+          <div className="text-2xl sm:text-3xl font-bold text-apple-text dark:text-eco-50 mt-1.5">No names</div>
+          <div className="text-xs text-apple-secondary dark:text-eco-400 mt-1 font-medium">Locations slightly blurred</div>
         </div>
 
         <div className="p-5 bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 rounded-2xl shadow-apple-card">
@@ -160,7 +168,7 @@ export default function CommunityPage() {
           <ShieldCheck className="w-5 h-5" />
         </div>
         <p className="text-xs sm:text-sm text-apple-secondary dark:text-eco-300 font-sans leading-relaxed">
-          <strong className="text-apple-text dark:text-eco-100 font-semibold">Privacy Protocol:</strong> Contributor phone numbers, IP addresses, names, and precise coordinates are scrubbed before storage. All locations are quantized to protect community members while preserving hydrological cluster validity.
+          <strong className="text-apple-text dark:text-eco-100 font-semibold">Your privacy comes first:</strong> names, phone numbers and exact locations are removed before anything is stored. Locations are slightly blurred to protect you while keeping the big picture accurate.
         </p>
       </div>
 
