@@ -150,29 +150,33 @@ export default function SentinelGlobe({
 
     // 6. Earth Sphere Geometry & Texture
     const earthGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
-
     const textureLoader = new THREE.TextureLoader();
-    
-    // Load local texture assets downloaded into /textures/
+
+    // Load ultralightweight satellite earth texture (300KB) and topology (27KB) for instant loading
     const dayTexture = textureLoader.load(
-      '/textures/earth-day.jpg',
-      () => { renderer.render(scene, camera); },
+      '/textures/earth-day-light.jpg',
+      () => { 
+        renderer.render(scene, camera); 
+      },
       undefined,
       () => {
-        // Fallback procedural canvas texture if file missing
-        console.warn('Earth texture loading fallback applied.');
+        console.warn('Satellite earth texture fallback applied.');
       }
     );
     dayTexture.colorSpace = THREE.SRGBColorSpace;
+    dayTexture.generateMipmaps = true;
+    dayTexture.minFilter = THREE.LinearMipmapLinearFilter;
 
-    const bumpTexture = textureLoader.load('/textures/earth-topology.png');
+    const bumpTexture = textureLoader.load('/textures/earth-topology-light.jpg');
+    bumpTexture.generateMipmaps = true;
 
     const earthMaterial = new THREE.MeshStandardMaterial({
+      color: 0x121F2D, // Oceanic base color during instant load
       map: dayTexture,
       bumpMap: bumpTexture,
-      bumpScale: 0.015,
+      bumpScale: 0.012,
       roughness: 0.65,
-      metalness: 0.1,
+      metalness: 0.05,
     });
 
     const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);

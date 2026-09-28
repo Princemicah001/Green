@@ -173,7 +173,7 @@ export default function ApiDocsPage() {
   };
 
   return (
-    <div className="flex-1 p-5 md:p-7 max-w-7xl w-full mx-auto space-y-7">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 w-full space-y-8">
       {/* Header */}
       <div className="border-b border-eco-750 pb-5">
         <div className="text-xs font-mono uppercase tracking-widest text-eco-400 font-bold">

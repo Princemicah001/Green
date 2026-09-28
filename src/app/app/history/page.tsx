@@ -11,7 +11,7 @@ export default function HistoryPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('90D');
 
   return (
-    <div className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto space-y-8 font-sans">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 w-full space-y-8 font-sans">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-apple-border dark:border-eco-750 pb-5">
         <div>

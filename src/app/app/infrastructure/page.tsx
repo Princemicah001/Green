@@ -10,7 +10,7 @@ export default function InfrastructurePage() {
   const { facilities, selectedLocation, simulateMitigationResponse, mitigationPlan } = useSentinel();
 
   return (
-    <div className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto space-y-8">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 w-full space-y-8">
       {/* Apple-Style Hero Banner with Green Datacenter Illustration */}
       <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 shadow-apple-card">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center">

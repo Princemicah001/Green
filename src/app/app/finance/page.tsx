@@ -5,7 +5,7 @@ import GreenFinanceLayer from '@/components/finance/GreenFinanceLayer';
 
 export default function FinancePage() {
   return (
-    <div className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto space-y-8">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 w-full space-y-8">
       <div className="border-b border-apple-border dark:border-eco-750 pb-5">
         <div className="text-xs font-mono uppercase tracking-widest text-apple-muted dark:text-eco-400 font-semibold">
           Climate Data, Awareness & Green Finance Hackathon Track

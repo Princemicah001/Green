@@ -37,14 +37,14 @@ export default function OverviewPage() {
   const [filterStatus, setFilterStatus] = useState<EnvironmentalStatus | 'ALL'>('ALL');
 
   return (
-    <div className="flex-1 flex flex-col p-4 sm:p-6 md:p-8 gap-7 max-w-[1700px] w-full mx-auto">
+    <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 xl:p-10 gap-7 w-full">
       {/* Top Section Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-apple-border dark:border-eco-750 pb-5">
         <div>
           <div className="text-xs font-mono uppercase tracking-widest text-apple-muted dark:text-eco-400 font-semibold">
             Environmental Intelligence Plane
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-apple-text dark:text-eco-50 tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-apple-text dark:text-eco-50 tracking-tight mt-1">
             Global Sentinel Command
           </h1>
         </div>
@@ -66,7 +66,7 @@ export default function OverviewPage() {
       {/* Main Workspace: 3D Globe is the HERO */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start">
         {/* The 3D Earth Globe Canvas */}
-        <div className="xl:col-span-8 h-[540px] md:h-[640px] bg-slate-950 border border-apple-border dark:border-eco-700 rounded-3xl relative overflow-hidden shadow-apple-card">
+        <div className="xl:col-span-8 h-[540px] md:h-[640px] xl:h-[720px] 2xl:h-[780px] bg-slate-950 border border-apple-border dark:border-eco-700 rounded-3xl relative overflow-hidden shadow-apple-card">
           <SentinelGlobe
             locations={locations}
             facilities={facilities}
