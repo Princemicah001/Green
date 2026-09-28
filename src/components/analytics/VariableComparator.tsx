@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { HistoryRepository } from '@/lib/repositories/historyRepository';
 import { useSentinel } from '@/lib/store/sentinelStore';
-import { Info, TrendingUp } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 type ComparisonPair = 'WATER_VS_HEAT' | 'COOLING_VS_WATER' | 'RAINFALL_VS_COMMUNITY';
 
@@ -54,8 +54,8 @@ export default function VariableComparator() {
 
   // SVG Chart Dimensions
   const width = 640;
-  const height = 180;
-  const padding = 30;
+  const height = 200;
+  const padding = 34;
 
   const pointsA = series.map((pt, i) => {
     const x = padding + (i / (series.length - 1)) * (width - padding * 2);
@@ -72,24 +72,24 @@ export default function VariableComparator() {
   }).join(' ');
 
   return (
-    <div className="bg-eco-900 border border-eco-700 rounded p-5 text-eco-50 font-mono">
+    <div className="bg-eco-900 border border-eco-700 rounded p-6 text-eco-50 font-mono">
       {/* Selector Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-eco-750 pb-4 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-eco-750 pb-4 mb-5">
         <div>
-          <span className="text-[10px] uppercase tracking-wider text-eco-400">
+          <span className="text-xs uppercase tracking-wider text-eco-400 font-bold">
             Multi-Variate Correlation Analytics
           </span>
-          <h3 className="text-sm font-semibold text-eco-50 mt-0.5">
+          <h3 className="text-base font-bold text-eco-50 mt-1">
             {selectedLocation.name} Cross-Domain Signal Inspection
           </h3>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs">
+        <div className="flex items-center gap-2 text-xs md:text-sm">
           <button
             onClick={() => setSelectedPair('WATER_VS_HEAT')}
-            className={`px-2.5 py-1 rounded border transition-colors ${
+            className={`px-3 py-1.5 rounded border transition-colors ${
               selectedPair === 'WATER_VS_HEAT'
-                ? 'bg-eco-750 text-eco-50 border-eco-600'
+                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
                 : 'text-eco-400 border-eco-800 hover:text-eco-200'
             }`}
           >
@@ -97,9 +97,9 @@ export default function VariableComparator() {
           </button>
           <button
             onClick={() => setSelectedPair('COOLING_VS_WATER')}
-            className={`px-2.5 py-1 rounded border transition-colors ${
+            className={`px-3 py-1.5 rounded border transition-colors ${
               selectedPair === 'COOLING_VS_WATER'
-                ? 'bg-eco-750 text-eco-50 border-eco-600'
+                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
                 : 'text-eco-400 border-eco-800 hover:text-eco-200'
             }`}
           >
@@ -107,9 +107,9 @@ export default function VariableComparator() {
           </button>
           <button
             onClick={() => setSelectedPair('RAINFALL_VS_COMMUNITY')}
-            className={`px-2.5 py-1 rounded border transition-colors ${
+            className={`px-3 py-1.5 rounded border transition-colors ${
               selectedPair === 'RAINFALL_VS_COMMUNITY'
-                ? 'bg-eco-750 text-eco-50 border-eco-600'
+                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
                 : 'text-eco-400 border-eco-800 hover:text-eco-200'
             }`}
           >
@@ -119,29 +119,29 @@ export default function VariableComparator() {
       </div>
 
       {/* SVG Dual-Trace Chart */}
-      <div className="w-full bg-eco-950 border border-eco-750 rounded p-3 mb-4">
-        <div className="flex items-center justify-between text-xs mb-2">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5" style={{ backgroundColor: pairConfig.colorA }} />
-              <span className="text-eco-200">{pairConfig.labelA}</span>
+      <div className="w-full bg-eco-950 border border-eco-750 rounded p-4 mb-5">
+        <div className="flex items-center justify-between text-sm mb-3">
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-1" style={{ backgroundColor: pairConfig.colorA }} />
+              <span className="text-eco-100 font-semibold">{pairConfig.labelA}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5" style={{ backgroundColor: pairConfig.colorB }} />
-              <span className="text-eco-200">{pairConfig.labelB}</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-1" style={{ backgroundColor: pairConfig.colorB }} />
+              <span className="text-eco-100 font-semibold">{pairConfig.labelB}</span>
             </div>
           </div>
-          <span className="text-[11px] text-eco-300 font-semibold">{pairConfig.correlationValue}</span>
+          <span className="text-xs md:text-sm text-eco-200 font-bold">{pairConfig.correlationValue}</span>
         </div>
 
-        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-44 overflow-visible">
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-48 overflow-visible">
           {/* Horizontal grid lines */}
           {[0, 25, 50, 75, 100].map(val => {
             const y = height - padding - (val / 100) * (height - padding * 2);
             return (
               <g key={val}>
                 <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#22272D" strokeWidth="1" />
-                <text x={padding - 6} y={y + 3} fill="#60676E" fontSize="9" textAnchor="end" fontFamily="monospace">
+                <text x={padding - 8} y={y + 3.5} fill="#8B9299" fontSize="10" textAnchor="end" fontFamily="monospace">
                   {val}
                 </text>
               </g>
@@ -152,7 +152,7 @@ export default function VariableComparator() {
           <polyline
             fill="none"
             stroke={pairConfig.colorA}
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             points={pointsA}
@@ -162,14 +162,14 @@ export default function VariableComparator() {
           <polyline
             fill="none"
             stroke={pairConfig.colorB}
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             points={pointsB}
           />
         </svg>
 
-        <div className="flex justify-between text-[10px] text-eco-500 px-8 pt-1">
+        <div className="flex justify-between text-xs text-eco-400 px-9 pt-2">
           <span>90 Days Ago</span>
           <span>60 Days Ago</span>
           <span>30 Days Ago</span>
@@ -178,13 +178,13 @@ export default function VariableComparator() {
       </div>
 
       {/* Scientific Responsible Language Notice (Requirement 24) */}
-      <div className="p-3 bg-eco-850 border border-eco-750 rounded text-xs text-eco-300 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-eco-400 shrink-0 mt-0.5" />
+      <div className="p-4 bg-eco-850 border border-eco-750 rounded text-sm text-eco-200 flex items-start gap-3">
+        <Info className="w-5 h-5 text-eco-400 shrink-0 mt-0.5" />
         <div className="space-y-1 font-sans">
-          <div className="font-semibold text-eco-100 font-mono text-[11px] uppercase">
+          <div className="font-bold text-eco-50 font-mono text-xs uppercase tracking-wider">
             Scientific Attribution Notice
           </div>
-          <p className="text-xs leading-relaxed text-eco-300">
+          <p className="text-sm leading-relaxed text-eco-200">
             {pairConfig.analysis} <em>Note: Statistical association indicates an observed relationship and environmental anomaly requiring further investigation; it does not constitute single-source causality.</em>
           </p>
         </div>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FacilityTelemetry } from '@/types';
 import { generateMitigationPlan } from '@/lib/intelligence/mitigationEngine';
-import { X, ArrowRight, ShieldCheck, Cpu, Droplets, Zap, CheckCircle2 } from 'lucide-react';
+import { X, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useSentinel } from '@/lib/store/sentinelStore';
 
 interface MitigationSimulatorModalProps {
@@ -30,43 +30,43 @@ export default function MitigationSimulatorModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-eco-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="w-full max-w-xl bg-eco-900 border border-eco-700 rounded shadow-2xl p-6 text-eco-50 font-mono">
+      <div className="w-full max-w-2xl bg-eco-900 border border-eco-700 rounded shadow-2xl p-7 text-eco-50 font-mono">
         {/* Modal Header */}
-        <div className="flex items-start justify-between border-b border-eco-750 pb-3 mb-4">
+        <div className="flex items-start justify-between border-b border-eco-750 pb-4 mb-5">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-eco-400">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs uppercase tracking-wider text-eco-400 font-semibold">
                 Decision Intelligence
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 bg-eco-800 border border-eco-700 text-eco-300 rounded">
+              <span className="text-xs px-2 py-0.5 bg-eco-800 border border-eco-700 text-eco-200 rounded font-bold">
                 SIMULATION
               </span>
             </div>
-            <h3 className="text-base font-semibold text-eco-50 mt-1">
+            <h3 className="text-lg font-bold text-eco-50 mt-1.5">
               Mitigation Response Plan • {facility.code}
             </h3>
-            <p className="text-xs text-eco-300 font-sans mt-0.5">
+            <p className="text-sm text-eco-300 font-sans mt-1">
               Simulate operational workload shedding and evaporative cooling setpoint shifts.
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1 text-eco-400 hover:text-eco-100 transition-colors"
+            className="p-1.5 text-eco-400 hover:text-eco-100 transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Recommended Actions List */}
-        <div className="mb-5">
-          <div className="text-[10px] uppercase tracking-wider text-eco-400 mb-2">
+        <div className="mb-6">
+          <div className="text-xs uppercase tracking-wider text-eco-400 mb-2.5 font-bold">
             Automated Operational Recommendations
           </div>
-          <div className="space-y-1.5 font-sans text-xs">
+          <div className="space-y-2 font-sans text-sm">
             {plan.recommendedActions.map((action, i) => (
-              <div key={i} className="flex items-start gap-2 p-2 bg-eco-850 border border-eco-750 rounded text-eco-200">
-                <span className="text-eco-400 font-mono text-[11px] mt-0.5">{i + 1}.</span>
+              <div key={i} className="flex items-start gap-2.5 p-2.5 bg-eco-850 border border-eco-750 rounded text-eco-200">
+                <span className="text-eco-400 font-mono text-xs mt-0.5 font-bold">{i + 1}.</span>
                 <span>{action}</span>
               </div>
             ))}
@@ -74,65 +74,65 @@ export default function MitigationSimulatorModal({
         </div>
 
         {/* Before vs After Impact Comparison (Requirement 21) */}
-        <div className="mb-6 bg-eco-950 border border-eco-750 rounded p-4">
-          <div className="text-[10px] uppercase tracking-wider text-eco-400 mb-3 flex items-center justify-between">
+        <div className="mb-6 bg-eco-950 border border-eco-750 rounded p-5">
+          <div className="text-xs uppercase tracking-wider text-eco-400 mb-3.5 flex items-center justify-between font-bold">
             <span>Projected Environmental Relief</span>
-            <span className="text-status-healthy font-semibold">
+            <span className="text-status-healthy font-bold text-sm">
               ↓ {plan.stressReductionPoints} Stress Points
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-2 gap-6 text-sm">
             {/* Before Column */}
-            <div className="space-y-2 border-r border-eco-800 pr-4">
-              <div className="text-[11px] text-eco-400 uppercase tracking-wider">Before Mitigation</div>
-              <div className="flex justify-between py-1 border-b border-eco-850">
-                <span className="text-eco-400">Water Consumption</span>
-                <span className="font-semibold text-eco-100">{plan.before.waterConsumptionMLDay} ML/day</span>
+            <div className="space-y-2.5 border-r border-eco-800 pr-5">
+              <div className="text-xs text-eco-400 uppercase tracking-wider font-semibold">Before Mitigation</div>
+              <div className="flex justify-between py-1.5 border-b border-eco-850">
+                <span className="text-eco-300">Water Consumption</span>
+                <span className="font-bold text-eco-100">{plan.before.waterConsumptionMLDay} ML/day</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-eco-850">
-                <span className="text-eco-400">Energy Draw</span>
-                <span className="font-semibold text-eco-100">{plan.before.powerMW} MW</span>
+              <div className="flex justify-between py-1.5 border-b border-eco-850">
+                <span className="text-eco-300">Energy Draw</span>
+                <span className="font-bold text-eco-100">{plan.before.powerMW} MW</span>
               </div>
-              <div className="flex justify-between py-1">
-                <span className="text-eco-400">Regional Stress</span>
-                <span className="font-semibold text-status-stressed">{plan.before.overallStress} / 100</span>
+              <div className="flex justify-between py-1.5">
+                <span className="text-eco-300">Regional Stress</span>
+                <span className="font-bold text-status-stressed">{plan.before.overallStress} / 100</span>
               </div>
             </div>
 
             {/* After Column */}
-            <div className="space-y-2 pl-2">
-              <div className="text-[11px] text-status-healthy uppercase tracking-wider">After Simulated Response</div>
-              <div className="flex justify-between py-1 border-b border-eco-850">
-                <span className="text-eco-400">Water Consumption</span>
-                <span className="font-semibold text-status-healthy">
+            <div className="space-y-2.5 pl-2">
+              <div className="text-xs text-status-healthy uppercase tracking-wider font-bold">After Simulated Response</div>
+              <div className="flex justify-between py-1.5 border-b border-eco-850">
+                <span className="text-eco-300">Water Consumption</span>
+                <span className="font-bold text-status-healthy">
                   {plan.after.waterConsumptionMLDay} ML/day (-{plan.waterSavingsPct}%)
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-eco-850">
-                <span className="text-eco-400">Energy Draw</span>
-                <span className="font-semibold text-status-healthy">
+              <div className="flex justify-between py-1.5 border-b border-eco-850">
+                <span className="text-eco-300">Energy Draw</span>
+                <span className="font-bold text-status-healthy">
                   {plan.after.powerMW} MW (-10%)
                 </span>
               </div>
-              <div className="flex justify-between py-1">
-                <span className="text-eco-400">Regional Stress</span>
-                <span className="font-semibold text-status-healthy">{plan.after.overallStress} / 100</span>
+              <div className="flex justify-between py-1.5">
+                <span className="text-eco-300">Regional Stress</span>
+                <span className="font-bold text-status-healthy">{plan.after.overallStress} / 100</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-[10px] text-eco-400">
+        <div className="flex items-center justify-between pt-3">
+          <span className="text-xs text-eco-400 font-mono">
             Audit logging: Hash generated for ESG compliance
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-3 py-1.5 bg-eco-800 hover:bg-eco-750 text-eco-300 rounded text-xs transition-colors"
+              className="px-4 py-2 bg-eco-800 hover:bg-eco-750 text-eco-300 rounded text-xs font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -143,18 +143,18 @@ export default function MitigationSimulatorModal({
                   onApplyMitigation(facility.id);
                   onClose();
                 }}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-status-healthy text-eco-950 font-semibold rounded text-xs transition-colors"
+                className="flex items-center gap-2 px-5 py-2 bg-status-healthy text-eco-950 font-bold rounded text-xs transition-colors"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                <CheckCircle2 className="w-4 h-4" />
                 <span>Mitigation Applied (Done)</span>
               </button>
             ) : (
               <button
                 onClick={handleSimulateResponse}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-eco-50 hover:bg-eco-200 text-eco-950 font-semibold rounded text-xs transition-colors"
+                className="flex items-center gap-2 px-5 py-2 bg-eco-50 hover:bg-eco-200 text-eco-950 font-bold rounded text-xs transition-colors"
               >
                 <span>SIMULATE RESPONSE</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             )}
           </div>

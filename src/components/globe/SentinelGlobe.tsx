@@ -561,13 +561,13 @@ export default function SentinelGlobe({
       {/* Floating Hover Indicator */}
       {hoveredEntity && (
         <div
-          className="absolute z-20 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-3 px-3 py-1.5 bg-eco-900/90 border border-eco-700 backdrop-blur-md rounded shadow-xl text-xs flex flex-col gap-0.5"
+          className="absolute z-20 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-3 px-3.5 py-2 bg-eco-900/95 border border-eco-700 backdrop-blur-md rounded shadow-xl text-sm flex flex-col gap-1"
           style={{ left: hoveredEntity.x, top: hoveredEntity.y }}
         >
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-eco-50">{hoveredEntity.name}</span>
+          <div className="flex items-center gap-2.5">
+            <span className="font-bold text-eco-50 text-sm">{hoveredEntity.name}</span>
             {hoveredEntity.status && (
-              <span className={`text-[10px] uppercase font-mono px-1 py-0.2 rounded border ${
+              <span className={`text-xs uppercase font-mono px-2 py-0.5 rounded border font-bold ${
                 hoveredEntity.status === 'CRITICAL' ? 'text-status-critical-text border-status-critical-border bg-status-critical-subtle' :
                 hoveredEntity.status === 'STRESSED' ? 'text-status-stressed-text border-status-stressed-border bg-status-stressed-subtle' :
                 hoveredEntity.status === 'WATCH' ? 'text-status-watch-text border-status-watch-border bg-status-watch-subtle' :
@@ -578,20 +578,20 @@ export default function SentinelGlobe({
             )}
           </div>
           {hoveredEntity.stress !== undefined && (
-            <div className="text-[11px] text-eco-300 font-mono">
-              Stress Index: <span className="text-eco-50 font-semibold">{hoveredEntity.stress}/100</span>
+            <div className="text-xs text-eco-300 font-mono font-medium">
+              Stress Index: <span className="text-eco-50 font-bold">{hoveredEntity.stress}/100</span>
             </div>
           )}
         </div>
       )}
 
-      {/* Discreet Coordinate & Compass Watermark */}
-      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-3 text-[11px] font-mono text-eco-400 pointer-events-none">
+      {/* Coordinate & Compass Watermark */}
+      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-3 text-xs font-mono text-eco-400 pointer-events-none font-medium">
         <span>3D SPATIAL ENGINE</span>
         <span className="text-eco-600">/</span>
         <span>EQUATORIAL PROJECTION</span>
         <span className="text-eco-600">/</span>
-        <span className="text-eco-300">INTERACTIVE ORBIT</span>
+        <span className="text-eco-200">INTERACTIVE ORBIT</span>
       </div>
     </div>
   );
