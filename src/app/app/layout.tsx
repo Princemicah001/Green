@@ -12,14 +12,14 @@ export default function AppLayout({
 }) {
   return (
     <SentinelProvider>
-      <div className="min-h-screen bg-eco-950 text-eco-50 flex flex-col font-sans select-none overflow-hidden">
+      <div className="min-h-screen bg-apple-bg text-apple-text dark:bg-eco-950 dark:text-eco-50 flex flex-col font-sans select-none overflow-x-hidden">
         {/* Top Header */}
         <Header />
 
         {/* Content Shell: Sidebar + Primary Workspace */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden relative">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-eco-950 flex flex-col">
+          <main className="flex-1 overflow-y-auto bg-apple-bg dark:bg-eco-950 text-apple-text dark:text-eco-50 flex flex-col">
             {children}
           </main>
         </div>

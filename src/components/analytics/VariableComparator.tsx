@@ -23,8 +23,8 @@ export default function VariableComparator() {
     WATER_VS_HEAT: {
       varA: 'Water Stress (0-100)',
       varB: 'Heat Stress (0-100)',
-      colorA: '#3B82F6', // Muted steel blue
-      colorB: '#EA580C', // Muted orange
+      colorA: '#0284C7', // Sky blue
+      colorB: '#EA580C', // Orange
       labelA: 'Water Stress',
       labelB: 'Heat Stress',
       correlationValue: 'r = +0.81 (Observed relationship)',
@@ -34,7 +34,7 @@ export default function VariableComparator() {
       varA: 'Facility Cooling Load (%)',
       varB: 'Evaporative Water Demand (ML/d)',
       colorA: '#6366F1', // Indigo
-      colorB: '#0EA5E9', // Sky blue
+      colorB: '#059669', // Emerald
       labelA: 'Cooling Demand',
       labelB: 'Water Demand',
       correlationValue: 'r = +0.89 (Observed relationship)',
@@ -44,7 +44,7 @@ export default function VariableComparator() {
       varA: 'Precipitation Deficit (%)',
       varB: 'Community Water Submissions',
       colorA: '#64748B', // Slate
-      colorB: '#F59E0B', // Amber
+      colorB: '#D97706', // Amber
       labelA: 'Rainfall Deficit',
       labelB: 'Community Signals',
       correlationValue: 'r = +0.76 (Potential correlation)',
@@ -72,66 +72,55 @@ export default function VariableComparator() {
   }).join(' ');
 
   return (
-    <div className="bg-eco-900 border border-eco-700 rounded p-6 text-eco-50 font-mono">
+    <div className="bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 rounded-2xl shadow-apple-card p-6 sm:p-7 text-apple-text dark:text-eco-50 font-sans">
       {/* Selector Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-eco-750 pb-4 mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-apple-border dark:border-eco-750 pb-5 mb-5">
         <div>
-          <span className="text-xs uppercase tracking-wider text-eco-400 font-bold">
-            Multi-Variate Correlation Analytics
+          <span className="text-xs uppercase tracking-wider text-apple-muted dark:text-eco-400 font-semibold font-mono">
+            Multi-Variate Correlation Engine
           </span>
-          <h3 className="text-base font-bold text-eco-50 mt-1">
+          <h3 className="text-lg sm:text-xl font-bold text-apple-text dark:text-eco-50 mt-1">
             {selectedLocation.name} Cross-Domain Signal Inspection
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 text-xs md:text-sm">
-          <button
-            onClick={() => setSelectedPair('WATER_VS_HEAT')}
-            className={`px-3 py-1.5 rounded border transition-colors ${
-              selectedPair === 'WATER_VS_HEAT'
-                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
-                : 'text-eco-400 border-eco-800 hover:text-eco-200'
-            }`}
-          >
-            Water vs Heat
-          </button>
-          <button
-            onClick={() => setSelectedPair('COOLING_VS_WATER')}
-            className={`px-3 py-1.5 rounded border transition-colors ${
-              selectedPair === 'COOLING_VS_WATER'
-                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
-                : 'text-eco-400 border-eco-800 hover:text-eco-200'
-            }`}
-          >
-            Cooling vs Water
-          </button>
-          <button
-            onClick={() => setSelectedPair('RAINFALL_VS_COMMUNITY')}
-            className={`px-3 py-1.5 rounded border transition-colors ${
-              selectedPair === 'RAINFALL_VS_COMMUNITY'
-                ? 'bg-eco-750 text-eco-50 border-eco-600 font-bold'
-                : 'text-eco-400 border-eco-800 hover:text-eco-200'
-            }`}
-          >
-            Rainfall vs Community
-          </button>
+        <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+          {[
+            { id: 'WATER_VS_HEAT', label: 'Water vs Heat' },
+            { id: 'COOLING_VS_WATER', label: 'Cooling vs Water' },
+            { id: 'RAINFALL_VS_COMMUNITY', label: 'Rainfall vs Community' },
+          ].map(btn => (
+            <button
+              key={btn.id}
+              onClick={() => setSelectedPair(btn.id as ComparisonPair)}
+              className={`px-3.5 py-1.5 rounded-xl border font-medium transition-all ${
+                selectedPair === btn.id
+                  ? 'bg-apple-text text-white dark:bg-eco-50 dark:text-eco-950 font-semibold shadow-apple-sm'
+                  : 'bg-apple-subtle dark:bg-eco-800 text-apple-secondary dark:text-eco-300 border-apple-border dark:border-eco-700 hover:bg-apple-hover'
+              }`}
+            >
+              {btn.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* SVG Dual-Trace Chart */}
-      <div className="w-full bg-eco-950 border border-eco-750 rounded p-4 mb-5">
-        <div className="flex items-center justify-between text-sm mb-3">
+      <div className="w-full bg-apple-subtle/50 dark:bg-eco-950 border border-apple-border dark:border-eco-750 rounded-2xl p-4 sm:p-5 mb-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-sm mb-3">
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
-              <span className="w-3.5 h-1" style={{ backgroundColor: pairConfig.colorA }} />
-              <span className="text-eco-100 font-semibold">{pairConfig.labelA}</span>
+              <span className="w-3.5 h-1.5 rounded-full" style={{ backgroundColor: pairConfig.colorA }} />
+              <span className="text-apple-text dark:text-eco-100 font-semibold">{pairConfig.labelA}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3.5 h-1" style={{ backgroundColor: pairConfig.colorB }} />
-              <span className="text-eco-100 font-semibold">{pairConfig.labelB}</span>
+              <span className="w-3.5 h-1.5 rounded-full" style={{ backgroundColor: pairConfig.colorB }} />
+              <span className="text-apple-text dark:text-eco-100 font-semibold">{pairConfig.labelB}</span>
             </div>
           </div>
-          <span className="text-xs md:text-sm text-eco-200 font-bold">{pairConfig.correlationValue}</span>
+          <span className="text-xs sm:text-sm text-apple-secondary dark:text-eco-200 font-bold font-mono">
+            {pairConfig.correlationValue}
+          </span>
         </div>
 
         <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-48 overflow-visible">
@@ -140,8 +129,8 @@ export default function VariableComparator() {
             const y = height - padding - (val / 100) * (height - padding * 2);
             return (
               <g key={val}>
-                <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#22272D" strokeWidth="1" />
-                <text x={padding - 8} y={y + 3.5} fill="#8B9299" fontSize="10" textAnchor="end" fontFamily="monospace">
+                <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="currentColor" className="text-slate-200 dark:text-eco-800" strokeWidth="1" />
+                <text x={padding - 8} y={y + 3.5} fill="#86868B" fontSize="10" textAnchor="end" fontFamily="monospace">
                   {val}
                 </text>
               </g>
@@ -169,7 +158,7 @@ export default function VariableComparator() {
           />
         </svg>
 
-        <div className="flex justify-between text-xs text-eco-400 px-9 pt-2">
+        <div className="flex justify-between text-xs text-apple-muted dark:text-eco-400 px-8 pt-2 font-mono">
           <span>90 Days Ago</span>
           <span>60 Days Ago</span>
           <span>30 Days Ago</span>
@@ -177,15 +166,15 @@ export default function VariableComparator() {
         </div>
       </div>
 
-      {/* Scientific Responsible Language Notice (Requirement 24) */}
-      <div className="p-4 bg-eco-850 border border-eco-750 rounded text-sm text-eco-200 flex items-start gap-3">
-        <Info className="w-5 h-5 text-eco-400 shrink-0 mt-0.5" />
-        <div className="space-y-1 font-sans">
-          <div className="font-bold text-eco-50 font-mono text-xs uppercase tracking-wider">
-            Scientific Attribution Notice
+      {/* Scientific Responsible Language Notice */}
+      <div className="p-4 bg-apple-subtle dark:bg-eco-850 border border-apple-border dark:border-eco-750 rounded-xl text-sm flex items-start gap-3">
+        <Info className="w-5 h-5 text-env-emerald shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <div className="font-bold text-apple-text dark:text-eco-50 font-mono text-xs uppercase tracking-wider">
+            Attribution & Correlation Notice
           </div>
-          <p className="text-sm leading-relaxed text-eco-200">
-            {pairConfig.analysis} <em>Note: Statistical association indicates an observed relationship and environmental anomaly requiring further investigation; it does not constitute single-source causality.</em>
+          <p className="text-sm leading-relaxed text-apple-secondary dark:text-eco-200">
+            {pairConfig.analysis} <em>Note: Statistical association indicates an observed relationship and regional anomaly requiring field investigation; it does not constitute single-source causality.</em>
           </p>
         </div>
       </div>

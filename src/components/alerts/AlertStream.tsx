@@ -3,7 +3,7 @@
 import React from 'react';
 import { SentinelAlert } from '@/types';
 import { useSentinel } from '@/lib/store/sentinelStore';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, AlertTriangle } from 'lucide-react';
 
 interface AlertStreamProps {
   alerts: SentinelAlert[];
@@ -14,78 +14,88 @@ export default function AlertStream({ alerts, showAcknowledge = true }: AlertStr
   const { setSelectedLocationId, acknowledgeAlert } = useSentinel();
 
   return (
-    <div className="w-full bg-eco-900 border border-eco-700 rounded overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-eco-750 flex items-center justify-between">
-        <span className="text-sm font-bold uppercase tracking-wider text-eco-100 font-mono">
-          Sentinel Alert Event Stream ({alerts.length})
-        </span>
-        <span className="text-xs font-mono text-eco-400">
-          Threshold Trigger Engine: ACTIVE
+    <div className="w-full bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700/80 rounded-2xl shadow-apple-card overflow-hidden">
+      <div className="px-6 py-4 border-b border-apple-border dark:border-eco-750 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-env-amber" />
+          <span className="text-base font-bold text-apple-text dark:text-eco-100">
+            Sentinel Alert Stream ({alerts.length})
+          </span>
+        </div>
+        <span className="text-xs font-mono text-apple-muted dark:text-eco-400 font-medium">
+          Automated Threshold Engine: ACTIVE
         </span>
       </div>
 
-      <div className="divide-y divide-eco-800 font-mono">
+      <div className="divide-y divide-apple-border/70 dark:divide-eco-800">
         {alerts.length === 0 ? (
-          <div className="p-8 text-center text-sm text-eco-400">
+          <div className="p-8 text-center text-sm text-apple-secondary dark:text-eco-400">
             No active alert triggers registered across monitored regions.
           </div>
         ) : (
-          alerts.map((alt) => (
-            <div
-              key={alt.id}
-              className={`p-5 hover:bg-eco-850/40 transition-colors flex flex-col gap-2.5 ${
-                alt.acknowledged ? 'opacity-60' : ''
-              }`}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2.5 text-sm">
-                <div className="flex items-center gap-3">
-                  <span className="text-eco-400 font-bold text-sm">{alt.timeFormatted}</span>
-                  <span className="text-eco-600">|</span>
+          alerts.map((alt) => {
+            const severityBadge =
+              alt.severity === 'CRITICAL' ? 'bg-status-critical/10 text-status-critical border-status-critical/30' :
+              alt.severity === 'HIGH' ? 'bg-status-stressed/10 text-status-stressed border-status-stressed/30' :
+              'bg-status-watch/10 text-status-watch border-status-watch/30';
 
-                  <span className={`text-xs uppercase px-2 py-0.5 rounded border font-bold ${
-                    alt.severity === 'CRITICAL' ? 'text-status-critical-text border-status-critical-border bg-status-critical-subtle' :
-                    alt.severity === 'HIGH' ? 'text-status-stressed-text border-status-stressed-border bg-status-stressed-subtle' :
-                    'text-eco-300 border-eco-700 bg-eco-800'
-                  }`}>
-                    {alt.severity}
-                  </span>
+            return (
+              <div
+                key={alt.id}
+                className={`p-5 sm:p-6 hover:bg-apple-subtle/50 dark:hover:bg-eco-850/40 transition-colors flex flex-col gap-3 ${
+                  alt.acknowledged ? 'opacity-60' : ''
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="text-apple-muted dark:text-eco-400 font-mono font-medium text-xs sm:text-sm">
+                      {alt.timeFormatted}
+                    </span>
+                    <span className="text-apple-border dark:text-eco-600">|</span>
 
-                  <span className="text-eco-50 font-bold text-sm">{alt.title}</span>
-                </div>
+                    <span className={`text-xs uppercase px-2.5 py-0.5 rounded-full border font-bold font-mono ${severityBadge}`}>
+                      {alt.severity}
+                    </span>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setSelectedLocationId(alt.locationId)}
-                    className="text-xs text-eco-200 hover:text-eco-50 flex items-center gap-1.5 transition-colors px-3 py-1 rounded bg-eco-800 border border-eco-700 hover:bg-eco-750 font-semibold"
-                  >
-                    <span>Focus on Globe</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+                    <span className="text-apple-text dark:text-eco-50 font-bold text-sm sm:text-base">
+                      {alt.title}
+                    </span>
+                  </div>
 
-                  {showAcknowledge && !alt.acknowledged && (
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => acknowledgeAlert(alt.id)}
-                      className="text-xs text-eco-400 hover:text-eco-200 px-2.5 py-1 rounded border border-eco-800 hover:border-eco-700 transition-colors flex items-center gap-1 font-semibold"
-                      title="Acknowledge alert"
+                      onClick={() => setSelectedLocationId(alt.locationId)}
+                      className="text-xs font-medium text-apple-text dark:text-eco-100 flex items-center gap-1.5 transition-all px-3 py-1.5 rounded-xl bg-apple-subtle hover:bg-apple-hover dark:bg-eco-800 dark:hover:bg-eco-750 border border-apple-border dark:border-eco-700 shadow-apple-sm active:scale-95"
                     >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Ack</span>
+                      <span>Focus on Globe</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
-                  )}
+
+                    {showAcknowledge && !alt.acknowledged && (
+                      <button
+                        onClick={() => acknowledgeAlert(alt.id)}
+                        className="text-xs font-medium text-apple-secondary dark:text-eco-400 hover:text-env-emerald px-2.5 py-1.5 rounded-xl border border-apple-border dark:border-eco-800 hover:border-env-emerald transition-colors flex items-center gap-1"
+                        title="Acknowledge alert"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Acknowledge</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-sm sm:text-base text-apple-secondary dark:text-eco-200 font-sans leading-relaxed">
+                  {alt.description}
+                </p>
+
+                <div className="text-xs text-apple-muted dark:text-eco-400 flex flex-wrap items-center gap-4 pt-1 font-sans">
+                  <span>Location: <strong className="text-apple-text dark:text-eco-200 font-medium">{alt.locationName}</strong></span>
+                  <span>Category: <strong className="text-apple-text dark:text-eco-200 font-medium">{alt.category}</strong></span>
+                  <span className="font-mono text-apple-muted">ID: {alt.id}</span>
                 </div>
               </div>
-
-              <p className="text-sm text-eco-200 font-sans leading-relaxed">
-                {alt.description}
-              </p>
-
-              <div className="text-xs text-eco-400 flex items-center gap-4">
-                <span>Location: <strong className="text-eco-300 font-normal">{alt.locationName}</strong></span>
-                <span>Category: <strong className="text-eco-300 font-normal">{alt.category}</strong></span>
-                <span>Timestamp: <strong className="text-eco-300 font-normal">{alt.timestamp}</strong></span>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

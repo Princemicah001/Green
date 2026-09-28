@@ -11,8 +11,8 @@ import { Eye } from 'lucide-react';
 const SentinelGlobe = dynamic(() => import('@/components/globe/SentinelGlobe'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-eco-950 text-eco-400 font-mono text-sm">
-      Mounting Sentinel 3D Spatial Canvas...
+    <div className="w-full h-full flex items-center justify-center bg-slate-950 text-slate-400 font-sans text-sm">
+      Initializing 3D Sentinel Earth...
     </div>
   ),
 });
@@ -34,13 +34,13 @@ export default function GlobePage() {
   const [isTwinDrawerOpen, setIsTwinDrawerOpen] = useState(true);
 
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] bg-eco-950 flex flex-col overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-4rem)] bg-slate-950 flex flex-col overflow-hidden font-sans">
       {/* Overlay Header Controls */}
-      <div className="absolute top-5 left-5 z-20 flex flex-col gap-2.5">
-        <div className="p-4 bg-eco-900/95 border border-eco-700/80 backdrop-blur-md rounded shadow-xl font-mono text-sm max-w-sm">
-          <div className="text-xs text-eco-400 uppercase tracking-wider font-semibold">Spatial Observation Engine</div>
-          <div className="text-base font-bold text-eco-50 mt-1">Sentinel Geospatial Mesh</div>
-          <div className="text-xs text-eco-300 mt-1 font-medium">
+      <div className="absolute top-5 left-5 z-20 flex flex-col gap-3">
+        <div className="p-4 sm:p-5 bg-white/90 dark:bg-eco-900/95 border border-apple-border dark:border-eco-700/80 backdrop-blur-xl rounded-2xl shadow-apple-card text-apple-text dark:text-eco-50 max-w-sm">
+          <div className="text-xs text-apple-muted dark:text-eco-400 uppercase tracking-wider font-semibold font-mono">Spatial Observation Engine</div>
+          <div className="text-lg font-bold text-apple-text dark:text-eco-50 mt-1">Sentinel 3D Geospatial Mesh</div>
+          <div className="text-xs sm:text-sm text-apple-secondary dark:text-eco-300 mt-1 font-medium">
             Monitoring {locations.length} basins • {facilities.length} critical infrastructure facilities
           </div>
         </div>
@@ -59,16 +59,16 @@ export default function GlobePage() {
       </div>
 
       {/* Fly-to Location Quick List Bar (Top Right) */}
-      <div className="absolute top-5 right-5 z-20 hidden md:flex items-center gap-2 p-2 bg-eco-900/95 border border-eco-700/80 backdrop-blur-md rounded shadow-xl font-mono text-xs">
-        <span className="text-xs text-eco-400 px-2 uppercase font-bold">Fly To:</span>
+      <div className="absolute top-5 right-5 z-20 hidden md:flex items-center gap-1.5 p-2 bg-white/90 dark:bg-eco-900/95 border border-apple-border dark:border-eco-700/80 backdrop-blur-xl rounded-2xl shadow-apple-card text-xs">
+        <span className="text-xs text-apple-muted dark:text-eco-400 px-2 font-mono uppercase font-bold">Fly To:</span>
         {locations.map(loc => (
           <button
             key={loc.id}
             onClick={() => setSelectedLocationId(loc.id)}
-            className={`px-3 py-1.5 rounded transition-colors ${
+            className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
               loc.id === selectedLocationId
-                ? 'bg-eco-750 text-eco-50 font-bold border border-eco-600'
-                : 'text-eco-300 hover:text-eco-100 hover:bg-eco-800 font-medium'
+                ? 'bg-env-emerald text-white font-semibold shadow-sm'
+                : 'text-apple-secondary dark:text-eco-300 hover:bg-apple-subtle dark:hover:bg-eco-800'
             }`}
           >
             {loc.name}
@@ -97,7 +97,7 @@ export default function GlobePage() {
           <div className="relative">
             <button
               onClick={() => setIsTwinDrawerOpen(false)}
-              className="absolute top-3.5 right-3.5 z-30 text-xs font-mono text-eco-300 hover:text-eco-50 bg-eco-800/90 px-2.5 py-1 rounded border border-eco-700 font-semibold"
+              className="absolute top-4 right-4 z-30 text-xs font-sans text-apple-muted hover:text-apple-text dark:text-eco-300 dark:hover:text-eco-50 bg-apple-subtle hover:bg-apple-hover dark:bg-eco-800/90 px-3 py-1 rounded-xl border border-apple-border dark:border-eco-700 font-semibold shadow-sm"
             >
               Minimize
             </button>
@@ -106,9 +106,9 @@ export default function GlobePage() {
         ) : (
           <button
             onClick={() => setIsTwinDrawerOpen(true)}
-            className="px-5 py-2.5 bg-eco-900 border border-eco-700 text-eco-100 font-mono text-sm rounded shadow-2xl hover:bg-eco-850 transition-colors flex items-center gap-2.5 font-bold"
+            className="px-5 py-3 bg-white dark:bg-eco-900 border border-apple-border dark:border-eco-700 text-apple-text dark:text-eco-100 text-sm font-medium rounded-2xl shadow-apple-hover hover:scale-105 transition-all flex items-center gap-2.5"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-4 h-4 text-env-emerald" />
             <span>Open {selectedLocation.name} Twin</span>
           </button>
         )}

@@ -40,6 +40,13 @@ interface SentinelContextType {
   acknowledgeAlert: (alertId: string) => void;
   resetAllDemoData: () => void;
   
+  // Theme & Layout
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+  toggleTheme: () => void;
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (open: boolean) => void;
+
   // Demonstration Scenario
   demoStep: number; // 0: Initial, 1: Community surge, 2: Heat spike (Critical), 3: Mitigated
   runNextDemoStep: () => void;
@@ -72,12 +79,51 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
     environmentMode: 'DEMO ENVIRONMENT',
   });
 
-  // Sync state from repositories on mount
+  // Theme state: defaults to 'light' for clean Apple aesthetic
+  const [theme, setThemeState] = useState<'light' | 'dark'>('light');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  const setTheme = useCallback((newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('eco_shield_theme', newTheme);
+        if (newTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch {
+        // Fallback
+      }
+    }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }, [theme, setTheme]);
+
+  // Sync state from repositories & theme on mount
   useEffect(() => {
     setLocations(locRepo.getAll());
     setFacilities(infraRepo.getAll());
     setCommunityReports(repRepo.getAll());
     setAlerts(alertRepo.getAll());
+
+    if (typeof window !== 'undefined') {
+      try {
+        const storedTheme = localStorage.getItem('eco_shield_theme') as 'light' | 'dark' | null;
+        const initialTheme = storedTheme || 'light';
+        setThemeState(initialTheme);
+        if (initialTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch {
+        // Fallback
+      }
+    }
   }, []);
 
   const selectedLocation = locations.find(l => l.id === selectedLocationId) || locations[0] || locRepo.getPrimaryDemoLocation();
@@ -297,6 +343,11 @@ export function SentinelProvider({ children }: { children: ReactNode }) {
         simulateMitigationResponse,
         acknowledgeAlert,
         resetAllDemoData,
+        theme,
+        setTheme,
+        toggleTheme,
+        isMobileMenuOpen,
+        setIsMobileMenuOpen,
         demoStep,
         runNextDemoStep,
         resetDemoScenario,
