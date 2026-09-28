@@ -3,7 +3,7 @@
 
 > **"Detect environmental stress before it becomes a crisis."**
 
-Eco-Shield Sentinel Network is an enterprise climate and critical infrastructure intelligence platform designed for presentation to **Oracle, @iLabAfrica, climate organizations, infrastructure operators, and impact investors**.
+Eco-Shield Sentinel Network is an open climate and critical infrastructure intelligence platform designed for **environmental organizations, infrastructure operators, municipal water authorities, researchers, and climate stewards worldwide**.
 
 The platform converges three critical data domains—**Climate/Satellite Telemetry**, **Infrastructure SCADA/BMS Feeds**, and **Decentralized Ground Community Observations**—into a unified real-time spatial intelligence plane to detect resource and thermal stress, simulate operational mitigation, and provide auditable environmental evidence for green finance.
 

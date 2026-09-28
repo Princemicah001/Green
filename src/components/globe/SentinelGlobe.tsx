@@ -117,7 +117,7 @@ export default function SentinelGlobe({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.35;
     rendererRef.current = renderer;
 
     // 4. OrbitControls
@@ -133,20 +133,24 @@ export default function SentinelGlobe({
     controls.autoRotateSpeed = autoRotateSpeed;
     controlsRef.current = controls;
 
-    // 5. Lighting
-    // Ambient light: restrained, subtle illumination of the dark side
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.42);
+    // 5. Lighting: Bright, comprehensive illumination so all continents and oceans are vibrant and clearly visible
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.15);
     scene.add(ambientLight);
 
-    // Directional light: simulates the Sun
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.25);
+    // Primary directional light
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.4);
     sunLight.position.set(6, 4, 7);
     scene.add(sunLight);
 
-    // Secondary fill light for soft dimensional depth
-    const rimLight = new THREE.DirectionalLight(0x426888, 0.35);
-    rimLight.position.set(-6, -2, -5);
-    scene.add(rimLight);
+    // Opposite fill light so back/sides are brightly lit
+    const fillLight = new THREE.DirectionalLight(0xd6eaff, 0.85);
+    fillLight.position.set(-6, -2, -5);
+    scene.add(fillLight);
+
+    // Top polar light
+    const polarLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    polarLight.position.set(0, 8, 0);
+    scene.add(polarLight);
 
     // 6. Earth Sphere Geometry & Texture
     const earthGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
@@ -171,12 +175,12 @@ export default function SentinelGlobe({
     bumpTexture.generateMipmaps = true;
 
     const earthMaterial = new THREE.MeshStandardMaterial({
-      color: 0x121F2D, // Oceanic base color during instant load
+      color: 0xffffff, // Full white so satellite textures (vibrant blue oceans, green land, deserts) are bright and clear!
       map: dayTexture,
       bumpMap: bumpTexture,
-      bumpScale: 0.012,
-      roughness: 0.65,
-      metalness: 0.05,
+      bumpScale: 0.008,
+      roughness: 0.45,
+      metalness: 0.02,
     });
 
     const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
@@ -196,8 +200,8 @@ export default function SentinelGlobe({
       fragmentShader: `
         varying vec3 vNormal;
         void main() {
-          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.2);
-          gl_FragColor = vec4(0.28, 0.48, 0.72, 1.0) * intensity * 0.42;
+          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+          gl_FragColor = vec4(0.35, 0.65, 0.95, 1.0) * intensity * 0.6;
         }
       `,
       blending: THREE.AdditiveBlending,
